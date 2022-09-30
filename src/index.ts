@@ -1,15 +1,15 @@
-import { app } from "./app";
-import debug from "debug";
-import http from "http";
+import debug from 'debug';
+import http from 'http';
+import { app } from './app';
 
 // error handler
 const onError = (error: NodeJS.ErrnoException) => {
-	if (error.syscall !== "listen") throw error;
+	if (error.syscall !== 'listen') throw error;
 	switch (error.code) {
-		case "EACCES":
+		case 'EACCES':
 			console.error(`Port ${port} requires elevated privileges.`);
 			process.exit(1);
-		case "EADDRINUSE":
+		case 'EADDRINUSE':
 			console.error(`Port ${port} is already in use.`);
 			process.exit(1);
 		default:
@@ -21,7 +21,7 @@ const onError = (error: NodeJS.ErrnoException) => {
 const onListening = () => {
 	const address = server.address();
 	const bind =
-		typeof address === "string"
+		typeof address === 'string'
 			? `pipe ${address}`
 			: `port ${address?.port}`;
 	debug(`Listening on ${bind}`);
@@ -30,5 +30,5 @@ const onListening = () => {
 const port: Number = +process.env.PORT! || 3000;
 const server = http.createServer(app);
 server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+server.on('error', onError);
+server.on('listening', onListening);

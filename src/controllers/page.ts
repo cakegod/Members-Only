@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 const something = (req: Request, res: Response) => {
-	res.send("E.");
+	res.send('E.');
 };
 
 export { something };
