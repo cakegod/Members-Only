@@ -5,7 +5,7 @@ interface IUser {
 	// lastName: string;
 	username: string;
 	password: string;
-	membership: string;
+	membership: 'newbie' | 'member' | 'admin';
 }
 
 const UserSchema = new Schema<IUser>({
@@ -13,7 +13,7 @@ const UserSchema = new Schema<IUser>({
 	// lastName: { type: String, required: true },
 	username: { type: String, required: true },
 	password: { type: String, required: true },
-	membership: { type: String, required: true, default: 'normal' },
+	membership: { type: String, required: true, default: 'newbie' },
 });
 
 const User = model<IUser>('User', UserSchema);
