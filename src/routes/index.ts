@@ -9,10 +9,17 @@ router
 	.route('/login')
 	.get(userController.getLogin)
 	.post(userController.postLogin);
-	
+
 router
 	.route('/signup')
 	.get(userController.getSignup)
 	.post(userController.postSignup);
+
+router
+	.route('/club-join')
+	.get(userController.getClubJoin)
+	.post(userController.postClubJoin);
+
+router.get('/logout', userController.getLogout);
 
 export default router;

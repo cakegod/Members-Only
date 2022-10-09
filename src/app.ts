@@ -52,7 +52,6 @@ if (app.get('env') === 'production') {
 
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
-	console.log(res.locals.currentUser);
 	next();
 });
 
