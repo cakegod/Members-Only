@@ -1,6 +1,8 @@
 import debug from 'debug';
 import http from 'http';
-import { app } from './app';
+import app from './app';
+
+const port: Number = +process.env.PORT! || 3000;
 
 // error handler
 const onError = (error: NodeJS.ErrnoException) => {
@@ -9,13 +11,19 @@ const onError = (error: NodeJS.ErrnoException) => {
 		case 'EACCES':
 			console.error(`Port ${port} requires elevated privileges.`);
 			process.exit(1);
+			break;
 		case 'EADDRINUSE':
 			console.error(`Port ${port} is already in use.`);
 			process.exit(1);
+			break;
 		default:
 			throw error;
 	}
 };
+
+const server = http.createServer(app);
+server.listen(port);
+server.on('error', onError);
 
 // event listener
 const onListening = () => {
@@ -27,8 +35,4 @@ const onListening = () => {
 	debug(`Listening on ${bind}`);
 };
 
-const port: Number = +process.env.PORT! || 3000;
-const server = http.createServer(app);
-server.listen(port);
-server.on('error', onError);
 server.on('listening', onListening);

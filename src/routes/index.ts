@@ -1,10 +1,8 @@
 import express from 'express';
 import { pageRouter } from '@routes/page-router';
 
-const indexRouter = () => {
-	const router = express.Router();
-	router.use('/a-page', pageRouter());
-	return router;
-};
+const router = express.Router();
 
-export { indexRouter };
+router.route('/').get('controller...');
+
+export default router;
