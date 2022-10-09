@@ -1,0 +1,17 @@
+extends layout 
+
+block content
+  form(action="" method="POST")
+    section
+      label(for="username") Username
+      input(name="username" type="text" required)
+    section  
+      label(for="password") Password
+      input(name="password" type="password" required)
+      label(for="password_confirm") Confirm Password
+      input(name="password_confirm" type="password" required)
+    button(type="submit") Sign up
+    if errors
+      ul
+        for error in errors
+            li!= error.msg

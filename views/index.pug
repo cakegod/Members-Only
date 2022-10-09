@@ -1,6 +1,9 @@
-extends boilerplate
+extends layout
 
 block content
+  if user
+    h2 Welcome #{currentUser.username}
+  else
   header 
     h1= 'Express'
     p= 'Some boilerplate.. am I right?'
