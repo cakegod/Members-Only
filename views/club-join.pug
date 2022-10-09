@@ -1,0 +1,12 @@
+extends layout 
+
+block content 
+  h2 Enter the secret code to enter the special member club! 
+  form(method="POST" action="")
+    label(for="secret-code") Secret Code
+    input(name="secret-code" type="text" required)
+    button(type="submit") Join!
+    if errors
+      ul
+        for error in errors
+            li!= error.msg

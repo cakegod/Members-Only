@@ -1,13 +1,20 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    h1 
-    a(href="/signup") Signup
-    h1 
-    a(href="/login") Login
-    h1 
-    a(href="/") Home
-    block content
+    head
+      title= title
+      link(rel='stylesheet', href='/stylesheets/style.css')
+    body
+      h1 
+      a(href="/") Home
+      if currentUser
+        h1 
+        a(href="/logout") Logout
+        if currentUser.membership === "newbie"
+          h1 
+          a(href="/club-join") Join the club!
+      else
+        h1 
+        a(href="/login") Login
+        h1 
+        a(href="/signup") Signup
+      block content

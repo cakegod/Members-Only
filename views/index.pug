@@ -1,9 +1,11 @@
 extends layout
 
 block content
-  if user
-    h2 Welcome #{currentUser.username}
+  header
+  if currentUser
+    h1 Welcome #{currentUser.username} 
+    h2 Status: #{currentUser.membership}
   else
-  header 
-    h1= 'Express'
-    p= 'Some boilerplate.. am I right?'
+    h1 Please login to post
+  
+    
