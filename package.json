@@ -1,7 +1,7 @@
 {
-	"name": "express-ts-mongo-template",
+	"name": "members-only",
 	"version": "1.0.0",
-	"description": "A simple inventory app as an express-pug experiment",
+	"description": "",
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "node ./dist/index.js",
@@ -13,15 +13,15 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/cakegod/Express-TS-Mongo-template.git"
+		"url": "git+https://github.com/cakegod/Members-Only.git"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "GNU GPL v3",
 	"bugs": {
-		"url": "https://github.com/cakegod/Express-TS-Mongo-template/issues"
+		"url": "https://github.com/cakegod/Members-Only/issues"
 	},
-	"homepage": "https://github.com/cakegod/Express-TS-Mongo-template",
+	"homepage": "https://github.com/cakegod/Members-Only",
 	"dependencies": {
 		"async": "^3.2.4",
 		"bcryptjs": "^2.4.3",
@@ -61,6 +61,7 @@
 		"node": ">=16.0.0"
 	},
 	"devDependencies": {
+		"@types/async": "^3.2.15",
 		"@types/bcryptjs": "^2.4.2",
 		"@types/debug": "^4.1.7",
 		"@types/express": "^4.17.14",

@@ -19,7 +19,8 @@
 		"quotes": ["error", "single", { "allowTemplateLiterals": true }],
 		"semi": ["error", "always"],
 		"no-undef": "off",
-		"react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }]
+		"react/jsx-filename-extension": [0, { "extensions": [".js", ".jsx"] }],
+		"consistent-return": "off"
 	},
 
 	"settings": {

@@ -1,14 +1,19 @@
-import { Schema, model, InferSchemaType } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const PostSchema = new Schema({
+interface IPost {
+	title: string;
+	text: string;
+	date: Schema.Types.Date;
+	password: string;
+}
+
+const PostSchema = new Schema<IPost>({
 	title: { type: String, required: true },
 	text: { type: String, required: true },
 	date: { type: Schema.Types.Date, required: true, default: Date.now() },
 	password: { type: String, required: true },
 });
 
-type TPost = InferSchemaType<typeof PostSchema>;
+const Post = model<IPost>('Post', PostSchema);
 
-const Post = model('Post', PostSchema);
-
-export { Post, TPost };
+export { Post, IPost };
