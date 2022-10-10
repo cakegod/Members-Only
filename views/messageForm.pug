@@ -1,0 +1,15 @@
+extends layout 
+
+block content
+  form(action="" method="POST")
+    section
+      label(for="title") title
+      input(name="title" type="text" required)
+    section  
+      label(for="description") description
+      input(name="description" type="text" required)
+    button(type="submit") Post Message!
+    if errors
+      ul
+        for error in errors
+            li!= error.msg
