@@ -1,17 +1,17 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
 interface IPost {
 	title: string;
-	text: string;
+	description: string;
+	author: Types.ObjectId;
 	date: Schema.Types.Date;
-	password: string;
 }
 
 const PostSchema = new Schema<IPost>({
 	title: { type: String, required: true },
-	text: { type: String, required: true },
+	description: { type: String, required: true },
+	author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 	date: { type: Schema.Types.Date, required: true, default: Date.now() },
-	password: { type: String, required: true },
 });
 
 const Post = model<IPost>('Post', PostSchema);

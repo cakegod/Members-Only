@@ -1,9 +1,13 @@
 import express from 'express';
+import postController from '../controllers/postController';
 import userController from '../controllers/userController';
 
 const router = express.Router();
 
-router.get('/', (req, res) => res.render('index'));
+router
+	.route('/')
+	.get(postController.getMessages);
+// .post(userController.postClubJoin);
 
 router
 	.route('/login')
