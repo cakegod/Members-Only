@@ -9,6 +9,8 @@ html
     if currentUser
       h1 
       a(href="/logout") Logout
+      h1 
+      a(href="/message") Add Message
       if currentUser.membership === "newbie"
         h1 
         a(href="/club-join") Join the club!

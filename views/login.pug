@@ -1,6 +1,9 @@
 extends layout 
 
 block content
+  head 
+    h1 Login
+  if !currentUser
   form(action="" method="POST")
     section
       label(for="username") Username
@@ -9,3 +12,7 @@ block content
       label(for="password") Password
       input(name="password" type="password" required)
     button(type="submit") Login
+  if errors
+   ul
+     for error in errors
+         li!= error.msg

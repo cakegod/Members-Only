@@ -8,14 +8,16 @@ block content
   else
     h1 Please login
   body
-  if currentUser && currentUser.membership === "newbie"
-    h2 You have to join the club to see the messages 
-  else if currentUser
     each message in messages 
       div(class="msg-container") 
         h3 title: #{message.title}
         h4 description: #{message.description}
-        h4 member: #{message.author.username}
-        h4 date: #{message.date}
+        if currentUser && currentUser.membership !== "newbie"
+          h4 member: #{message.author.username}
+          h4 date: #{message.date}
+          if currentUser.membership === "admin"
+            form(action="" method="POST")
+              input(type="hidden" name="id" value=message.id)
+              button(type="submit") #{message.id}
   
     
