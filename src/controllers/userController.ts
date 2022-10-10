@@ -1,10 +1,8 @@
-import async from 'async';
 import { Request, Response, NextFunction } from 'express';
-import { body, check, validationResult } from 'express-validator';
+import { check, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import passport from 'passport';
 import { User } from '../models/User';
-import { CallbackError } from 'mongoose';
 
 const userController = {
 	getLogin: (req: Request, res: Response) => {
@@ -31,11 +29,11 @@ const userController = {
 		)
 			.exists()
 			.custom((value, { req }) => value === req.body.password),
+
 		(req: Request, res: Response, next: NextFunction) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				res.render('signup', {
-					title: 'Login',
 					errors: errors.array(),
 				});
 				return;

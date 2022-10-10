@@ -6,8 +6,13 @@ const router = express.Router();
 
 router
 	.route('/')
-	.get(postController.getMessages);
-// .post(userController.postClubJoin);
+	.get(postController.getMessages)
+	.post(postController.postDeleteMessage);
+
+router
+	.route('/message')
+	.get(postController.getMessageForm)
+	.post(postController.postMessageForm);
 
 router
 	.route('/login')
