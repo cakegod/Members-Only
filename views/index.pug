@@ -3,21 +3,20 @@ extends layout
 block content
   header
   if currentUser
-    h1 Welcome #{currentUser.username} 
+    h1 Welcome #{currentUser.username}
     h2 Membership Status: #{currentUser.membership}
   else
     h1 Please login
   body
-    each message in messages 
-      div(class="msg-container") 
+    each message in messages
+      div(class="msg-container")
         h3 title: #{message.title}
         h4 description: #{message.description}
-        if currentUser && currentUser.membership !== "newbie"
-          h4 member: #{message.author.username}
-          h4 date: #{message.date}
-          if currentUser.membership === "admin"
-            form(action="" method="POST")
-              input(type="hidden" name="id" value=message.id)
-              button(type="submit") #{message.id}
-  
+        h4 member: #{message.author.username}
+        h4 date: #{message.date}
+        if currentUser && (currentUser.membership === "admin" || currentUser.username === message.author.username)
+          form(action="" method="POST")
+            input(type="hidden" name="id" value=message.id)
+            button(type="submit") Delete!
+
     

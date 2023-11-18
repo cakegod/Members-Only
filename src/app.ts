@@ -99,7 +99,7 @@ passport.use(
 				return done(null, false, { message: 'Incorrect password' });
 			});
 		});
-	})
+	}),
 );
 
 passport.serializeUser((user, done) => {

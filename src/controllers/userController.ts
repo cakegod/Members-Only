@@ -25,7 +25,7 @@ const userController = {
 		check('password').exists(),
 		check(
 			'password_confirm',
-			'Both password and confirm password must be equal'
+			'Both password and confirm password must be equal',
 		)
 			.exists()
 			.custom((value, { req }) => value === req.body.password),
