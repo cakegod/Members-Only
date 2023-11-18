@@ -4,7 +4,7 @@ import createHttpError from 'http-errors';
 import logger from 'morgan';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 import { Strategy as LocalStrategy } from 'passport-local';
 import session from 'express-session';
 import bcrypt from 'bcryptjs';
@@ -12,19 +12,16 @@ import passport from 'passport';
 import indexRouter from './routes/index';
 import { User } from './models/User';
 import CHttpException from './types';
+import MongoStore from 'connect-mongo';
 
-// Init dotenv
+dotenv.config();
 
-config();
-
-// Database connection
 mongoose.connect(process.env.MONGO_URI!);
 mongoose.connection.on(
 	'error',
-	console.error.bind(console, 'MongoDB connection error:'),
+	console.error.bind(console, 'MongoDB connection error:')
 );
 
-// init express
 const app = express();
 
 // Passport
@@ -40,7 +37,7 @@ passport.use(
 		} else {
 			done(null, user);
 		}
-	}),
+	})
 );
 
 passport.serializeUser((user, done) => {
@@ -57,14 +54,14 @@ app.use(
 		secret: process.env.SESSION_SECRET!,
 		resave: false,
 		saveUninitialized: true,
-	}),
+		store: MongoStore.create({ client: mongoose.connection.getClient() })
+	})
 );
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
 // sets basic express settings
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 
 // logger
 if (app.get('env') === 'development') {
@@ -90,7 +87,7 @@ app.set('view engine', 'pug');
 app.use('/', indexRouter);
 
 // catch 404 and fwd
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use((_req: Request, _res: Response, next: NextFunction) => {
 	next(createHttpError(404));
 });
 
