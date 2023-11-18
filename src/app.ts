@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import createHttpError from 'http-errors';
 import logger from 'morgan';
@@ -7,32 +7,58 @@ import mongoose from 'mongoose';
 import { config } from 'dotenv';
 import { Strategy as LocalStrategy } from 'passport-local';
 import session from 'express-session';
-import passport from 'passport';
 import bcrypt from 'bcryptjs';
+import passport from 'passport';
 import indexRouter from './routes/index';
 import { User } from './models/User';
 import CHttpException from './types';
 
 // Init dotenv
+
 config();
 
 // Database connection
-const mongoDB = process.env.MONGO_URI!;
-mongoose.connect(mongoDB, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-} as mongoose.ConnectOptions);
-
-const db = mongoose.connection;
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+mongoose.connect(process.env.MONGO_URI!);
+mongoose.connection.on(
+	'error',
+	console.error.bind(console, 'MongoDB connection error:'),
+);
 
 // init express
 const app = express();
 
 // Passport
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
+passport.use(
+	new LocalStrategy(async (username, password, done) => {
+		const user = await User.findOne({ username });
+		if (!user) {
+			return done(null, false, { message: 'Incorrect username' });
+		}
+
+		if (bcrypt.compareSync(user.password, password)) {
+			done(null, false, { message: 'Incorrect password' });
+		} else {
+			done(null, user);
+		}
+	}),
+);
+
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+	const user = await User.findById(id);
+	done(null, user);
+});
+
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET!,
+		resave: false,
+		saveUninitialized: true,
+	}),
+);
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 
@@ -78,38 +104,6 @@ app.use((err: CHttpException, req: Request, res: Response) => {
 	// render error page
 	res.status(err.status || 500);
 	res.render('error');
-});
-
-passport.use(
-	new LocalStrategy((username, password, done) => {
-		User.findOne({ username }).exec((err, user) => {
-			if (err) {
-				return done(err);
-			}
-			if (!user) {
-				return done(null, false, { message: 'Incorrect username' });
-			}
-			bcrypt.compare(password, user.password, (_err, res) => {
-				if (_err) {
-					return done(_err);
-				}
-				if (res) {
-					return done(null, user);
-				}
-				return done(null, false, { message: 'Incorrect password' });
-			});
-		});
-	}),
-);
-
-passport.serializeUser((user, done) => {
-	done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-	User.findById(id).exec((err, user) => {
-		done(err, user);
-	});
 });
 
 export default app;

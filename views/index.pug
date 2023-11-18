@@ -12,10 +12,14 @@ block content
       div(class="msg-container")
         h3 title: #{message.title}
         h4 description: #{message.description}
-        h4 member: #{message.author.username}
-        h4 date: #{message.date}
-        if currentUser && (currentUser.membership === "admin" || currentUser.username === message.author.username)
-          form(action="" method="POST")
+        if currentUser
+          if message.author.username === currentUser.username
+            h4 @#{message.author.username}
+          else
+            h4 @You
+        h4 date: #{message.formattedDate}
+        if currentUser && (currentUser.isAdmin || currentUser.is(message.author))
+          form
             input(type="hidden" name="id" value=message.id)
             button(type="submit") Delete!
 

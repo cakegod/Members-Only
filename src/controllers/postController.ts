@@ -46,8 +46,9 @@ async function postMessageForm(req: Request, res: Response) {
 		title: req.body.title,
 		description: req.body.description,
 		author: req.user.id,
-		date: Date.now(),
 	});
+
+	console.log(post);
 
 	await post.save();
 
