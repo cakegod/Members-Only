@@ -1,19 +1,29 @@
-import { Schema, Types, model } from 'mongoose';
+import { InferSchemaType, model, Schema } from 'mongoose';
 
-interface IPost {
-	title: string;
-	description: string;
-	author: Types.ObjectId;
-	date: Schema.Types.Date;
-}
+const PostSchema = new Schema(
+	{
+		title: { type: String, required: true },
+		description: { type: String, required: true },
+		author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+		date: {
+			type: Schema.Types.Date,
+			default: Date.now,
+		},
+	},
+	{
+		virtuals: {
+			formattedDate: {
+				get() {
+					const date = new Date(this.date);
+					return `${date.toDateString()}, ${date.getHours()}h`;
+				},
+			},
+		},
+	},
+);
 
-const PostSchema = new Schema<IPost>({
-	title: { type: String, required: true },
-	description: { type: String, required: true },
-	author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-	date: { type: Schema.Types.Date, required: true, default: Date.now() },
-});
+type IPost = InferSchemaType<typeof PostSchema>;
 
-const Post = model<IPost>('Post', PostSchema);
+const Post = model('Post', PostSchema);
 
 export { Post, IPost };

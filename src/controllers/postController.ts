@@ -1,84 +1,63 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { check, validationResult } from 'express-validator';
 import { Post } from '../models/Post';
 
-const postController = {
-	getMessages: (req: Request, res: Response, next: NextFunction) => {
-		Post.find({})
-			.sort({ date: 1 })
-			.populate('author', 'username')
-			.exec((err, messages) => {
-				if (err) {
-					return next(err);
-				}
-				res.render('index', { messages });
-			});
-	},
+async function getMessages(_req: Request, res: Response) {
+	const messages = await Post.find({})
+		.sort({ date: 1 })
+		.populate('author', 'username');
 
-	postDeleteMessage: (req: Request, res: Response, next: NextFunction) => {
-		Post.findByIdAndDelete(req.body.id).exec(err => {
-			if (err) {
-				return next(err);
-			}
-			Post.find({})
-				.sort({ date: 1 })
-				.populate('author', 'username')
-				.exec((_err, messages) => {
-					if (_err) {
-						return next(_err);
-					}
-					res.render('index', { messages });
-				});
+	res.render('index', { messages });
+}
+
+async function postDeleteMessage(
+	req: Request,
+	_res: Response,
+	next: NextFunction,
+) {
+	await Post.findByIdAndDelete(req.body.id);
+	next();
+}
+
+async function getMessageForm(_req: Request, res: Response) {
+	res.render('messageForm');
+}
+
+const validateMessageForm = [
+	check('title', 'Title must not be empty').not().isEmpty().trim().escape(),
+	check('description', 'Title must not be empty')
+		.not()
+		.isEmpty()
+		.trim()
+		.escape(),
+];
+
+async function postMessageForm(req: Request, res: Response) {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()) {
+		res.render('messageForm', {
+			title: req.body.title,
+			description: req.body.description,
+			errors: errors.array(),
 		});
-	},
+		return;
+	}
+	const post = new Post({
+		title: req.body.title,
+		description: req.body.description,
+		author: req.user.id,
+	});
 
-	getMessageForm: (req: Request, res: Response, next: NextFunction) => {
-		res.render('messageForm');
-	},
+	console.log(post);
 
-	postMessageForm: [
-		check('title', 'Title must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		check('description', 'Title must not be empty')
-			.not()
-			.isEmpty()
-			.trim()
-			.escape(),
-		// check('author', 'Author must not be empty')
-		// 	.not()
-		// 	.isEmpty()
-		// 	.trim()
-		// 	.escape(),
-		// check('date', 'Date must not be empty').not().isEmpty().trim().escape(),
-		(req: Request, res: Response, next: NextFunction) => {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				res.render('messageForm', {
-					title: req.body.title,
-					description: req.body.description,
-					errors: errors.array(),
-				});
-				return;
-			}
-			const post = new Post({
-				title: req.body.title,
-				description: req.body.description,
-				author: req.user.id,
-				date: Date.now(),
-			});
+	await post.save();
 
-			post.save(err => {
-				if (err) {
-					return next(err);
-				}
-			});
+	res.redirect('/');
+}
 
-			res.redirect('/');
-		},
-	],
+export default {
+	getMessages,
+	postDeleteMessage: [postDeleteMessage, getMessages],
+	getMessageForm,
+	postMessageForm: [...validateMessageForm, postMessageForm],
 };
-
-export default postController;
